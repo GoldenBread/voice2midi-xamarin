@@ -114,6 +114,7 @@ namespace voice2midi
             Console.WriteLine("BtnReleased");
             await _recorder.StopRecording();
             Edit_InfoLabel(false);
+            ConvertBtn.IsEnabled = true;
         }
 
         async void PermissionBtn_Clicked(object sender, EventArgs e)
