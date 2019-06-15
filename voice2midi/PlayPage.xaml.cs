@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using Plugin.AudioRecorder;
 using Plugin.SimpleAudioPlayer;
+using Refit;
 using voice2midi.Models;
 using Xamarin.Forms;
 

@@ -137,6 +137,7 @@ namespace voice2midi
             await _recorder.StopRecording();
             Edit_InfoLabel(false);
             ConvertBtn.IsEnabled = true;
+            PlayBtn.IsEnabled = true;
 
             _audioSource = new StreamPart(_recorder.GetAudioFileStream(), "source.wav", "audio/x-wav");
         }
@@ -151,5 +152,15 @@ namespace voice2midi
             InfoLbl.Text = msg;
             InfoLbl.IsVisible = visibility;
         }
+
+        protected override void OnAppearing() // When coming from PlayPage, the audio_source stream closes. Disabling ConvertBtn to prevent errors.
+        {
+            if (!_audioSource.Value.CanRead)
+            {
+                PlayBtn.IsEnabled = false;
+                ConvertBtn.IsEnabled = false;
+            }
+        }
+
     }
 }
