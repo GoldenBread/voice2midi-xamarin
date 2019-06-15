@@ -29,7 +29,7 @@ namespace voice2midi
 
         async void Handle_Clicked(object sender, System.EventArgs e)
         {
-            await Navigation.PushAsync(new RecordVoicePage());
+            await Navigation.PushAsync(new SourceVoicePage());
         }
 
         async void Handle_Clicked_1(object sender, System.EventArgs e)

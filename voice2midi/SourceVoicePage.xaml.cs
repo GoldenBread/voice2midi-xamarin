@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Plugin.AudioRecorder;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
@@ -7,12 +8,12 @@ using Xamarin.Forms;
 
 namespace voice2midi
 {
-    public partial class RecordVoicePage : ContentPage
+    public partial class SourceVoicePage : ContentPage
     {
         AudioRecorderService _recorder;
         AudioPlayer _player;
 
-        public RecordVoicePage()
+        public SourceVoicePage()
         {
             InitializeComponent();
             _recorder = new AudioRecorderService
@@ -22,42 +23,41 @@ namespace voice2midi
             };
             //_recorder.
             _player = new AudioPlayer();
+            _player.FinishedPlaying += Player_Finished_Playing;
 
-            _ = AskPermissionsAsync();
+            _ = Check_Mic_Permission_Async();
         }
 
-        private async System.Threading.Tasks.Task AskPermissionsAsync()
+        private async Task Check_Mic_Permission_Async()
         {
-            Console.WriteLine("Asking permission");
+            PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Microphone);
+            if (status == PermissionStatus.Granted)
+            {
+                RecordBtn.IsEnabled = true;
+                PermissionBtn.IsEnabled = false;
+            }
+        }
+
+        private async Task Ask_Mic_Permissions_Async()
+        {
             try
             {
-                Console.WriteLine("Asking permission 2");
                 PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Microphone);
-                Console.WriteLine("Asking permission 3");
                 if (status != PermissionStatus.Granted)
                 {
-                    Console.WriteLine("Asking permission 4");
-                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Microphone))
-                    {
-                        await DisplayAlert("Need microphone", "Le mic", "OK");
-                    }
-                    Console.WriteLine("Asking permission 5");
-
                     Dictionary<Permission, PermissionStatus> results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Microphone);
-                    Console.WriteLine(results);
                     status = results[Permission.Microphone];
                 }
-                Console.WriteLine("Asking permission 6");
+                Console.WriteLine("\nPermissionsStatus");
                 Console.WriteLine(status);
-
                 if (status == PermissionStatus.Granted)
                 {
-                    //Query permission
                     Console.WriteLine("PermissionsStatus.Granted");
+                    RecordBtn.IsEnabled = true;
                 }
-                else if (status != PermissionStatus.Unknown)
+                else
                 {
-                    Console.WriteLine("PermissionsStatus.Uknown");
+                    Console.WriteLine("Permission not granted");
                     await Navigation.PopAsync();
                 }
             }
@@ -83,18 +83,34 @@ namespace voice2midi
             }
         }
 
+        void Player_Finished_Playing(object sender, EventArgs e)
+        {
+            Edit_InfoLabel(false);
+        }
+
         async void RecordBtn_Pressed(object sender, System.EventArgs e)
         {
             Console.WriteLine("BtnPressed");
             await _recorder.StartRecording();
-            NowRecordingLbl.IsVisible = true;
+            Edit_InfoLabel(true, "Now Recording...");
         }
 
         async void RecordBtn_Released(object sender, System.EventArgs e)
         {
             Console.WriteLine("BtnReleased");
             await _recorder.StopRecording();
-            NowRecordingLbl.IsVisible = false;
+            Edit_InfoLabel(false);
+        }
+
+        async void PermissionBtn_Clicked(object sender, System.EventArgs e)
+        {
+            await Ask_Mic_Permissions_Async();
+        }
+
+        private void Edit_InfoLabel(bool visibility, string msg = "")
+        {
+            InfoLbl.Text = msg;
+            InfoLbl.IsVisible = visibility;
         }
     }
 }

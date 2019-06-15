@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="voice2midi.SourceVoicePage">
+    <ContentPage.Content>
+        <StackLayout>           
+            <StackLayout Orientation="Vertical" VerticalOptions="Start" Padding="40, 40, 40, 40"> 
+                <Label Text="Recording page" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Vertical" VerticalOptions="Start" Padding="40, 40, 40, 40"> 
+                <Label Text="Record your sound or use your own file and convert it into musical notes"/>
+                <Label Text="To record your own voice, authorize the microphone permission and hold the record " />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand"> 
+                <Label x:Name="InfoLbl"
+                       TextColor="Red"
+                       FontSize="Large"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       IsVisible="false"/>
+            </StackLayout>
+            <StackLayout x:Name="FileInfoLayout" Orientation="Horizontal" IsVisible="false">
+                <Label Text="File loaded: " HorizontalOptions="CenterAndExpand"/>
+                <Label x:Name="FiledLoadedLbl" Text="source.wav" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+            <StackLayout>
+                <Button x:Name="PermissionBtn" Text="Request microphone permission" Clicked="PermissionBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="40, 40, 40, 40">
+                <Button x:Name="PlayBtn" Text="Play" Clicked="PlayBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="RecordBtn" Text="Record" Pressed="RecordBtn_Pressed" Released="RecordBtn_Released" HorizontalOptions="FillAndExpand" IsEnabled="false"/>
+                <Button x:Name="ConvertBtn" Text="Convert" Clicked="StopBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
