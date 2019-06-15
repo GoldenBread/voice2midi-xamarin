@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="voice2midi.RecordVoicePage">
+    <ContentPage.Content>
+        <StackLayout>           
+            <StackLayout Orientation="Horizontal" VerticalOptions="Start"> 
+                <Label Text="Recording page" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand"> 
+                <Label Text="Now recording" 
+                       x:Name="NowRecordingLbl"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       IsVisible="false"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="40, 40, 40, 40">
+                <Button x:Name="PlayBtn" Text="Play" Clicked="PlayBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="RecordBtn" Text="Record" Pressed="RecordBtn_Pressed" Released="RecordBtn_Released" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="StopBtn" Text="Stop" Clicked="StopBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
