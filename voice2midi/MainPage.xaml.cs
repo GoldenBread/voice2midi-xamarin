@@ -21,12 +21,12 @@ namespace voice2midi
 
         }
 
-        async void Handle_Clicked(object sender, System.EventArgs e)
+        async void Handle_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new SourceVoicePage());
         }
 
-        async void Handle_Clicked_1(object sender, System.EventArgs e)
+        async void Handle_Clicked_1(object sender, EventArgs e)
         {
             string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
             Voice2midiService service = new Voice2midiService(baseUrl);
@@ -36,12 +36,9 @@ namespace voice2midi
                 if (fileData == null)
                     return; // user canceled file picking
 
-
-                SoundLinkList soundLinkList = await service.Upload_Generate_Sound(new StreamPart(fileData.GetStream(), "source.wav", "audio/x-wav"));
-
-                await Navigation.PushAsync(new PlayPage
+                await Navigation.PushAsync(new SourceVoicePage
                 {
-                    BindingContext = soundLinkList
+                    BindingContext = new StreamPart(fileData.GetStream(), fileData.FileName, "audio/x-wav")
                 });
 
             }

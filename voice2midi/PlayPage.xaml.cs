@@ -22,6 +22,7 @@ namespace voice2midi
             var player = Plugin.SimpleAudioPlayer.CrossSimpleAudioPlayer.Current;
             player.Load(audioStream);
             player.Play();
+            Console.WriteLine("\nFinished PLAYING\n");
         }
 
         protected Stream Get_Stream(String url)

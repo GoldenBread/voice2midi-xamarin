@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Plugin.AudioRecorder;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using Plugin.SimpleAudioPlayer;
 using Refit;
 using voice2midi.Models;
 using voice2midi.Services;
@@ -14,12 +15,15 @@ namespace voice2midi
     public partial class SourceVoicePage : ContentPage
     {
         AudioRecorderService _recorder;
-        AudioPlayer _player;
+        ISimpleAudioPlayer _player;
         Voice2midiService _service;
+        StreamPart _audioSource;
 
         public SourceVoicePage()
         {
             InitializeComponent();
+
+            BindFromFile();
 
             _recorder = new AudioRecorderService
             {
@@ -27,13 +31,25 @@ namespace voice2midi
                 StopRecordingOnSilence = false
             };
 
-            _player = new AudioPlayer();
-            _player.FinishedPlaying += Player_Finished_Playing;
+            _player = CrossSimpleAudioPlayer.Current;
+            _player.PlaybackEnded += Player_Finished_Playing;
 
             _ = Check_Mic_Permission_Async();
 
             string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
             _service = new Voice2midiService(baseUrl);
+        }
+
+        private void BindFromFile() //The page can be called with a file already selected
+        {
+            if (BindingContext != null)
+            {
+                var stream = (StreamPart)BindingContext;
+                FiledLoadedLbl.Text = stream.FileName;
+                FileInfoLayout.IsVisible = true;
+
+                _audioSource = stream;
+            }
         }
 
         private async Task Check_Mic_Permission_Async()
@@ -80,7 +96,7 @@ namespace voice2midi
 
         async void ConvertBtn_Clicked(object sender, EventArgs e)
         {
-            SoundLinkList soundLinkList = await _service.Upload_Generate_Sound(new StreamPart(_recorder.GetAudioFileStream(), "source.wav", "audio/x-wav"));
+            SoundLinkList soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
 
             await Navigation.PushAsync(new PlayPage
             {
@@ -90,10 +106,12 @@ namespace voice2midi
 
         void PlayBtn_Clicked(object sender, EventArgs e)
         {
-            var filePath = _recorder.FilePath;
-            if (filePath != null)
+            var stream = _audioSource?.Value; // Null conditionnal operator in case if _audioSource is null
+            Edit_InfoLabel(true, "Now Playing...");
+            if (stream != null)
             {
-                _player.Play(filePath);
+                _player.Load(stream);
+                _player.Play();
             }
         }
 
@@ -104,6 +122,11 @@ namespace voice2midi
 
         async void RecordBtn_Pressed(object sender, EventArgs e)
         {
+            if (FileInfoLayout.IsVisible) // If we start recording, record sound will overwrite the eventual loaded file
+            {
+                FileInfoLayout.IsVisible = false;
+            }
+
             Console.WriteLine("BtnPressed");
             await _recorder.StartRecording();
             Edit_InfoLabel(true, "Now Recording...");
@@ -115,6 +138,8 @@ namespace voice2midi
             await _recorder.StopRecording();
             Edit_InfoLabel(false);
             ConvertBtn.IsEnabled = true;
+
+            _audioSource = new StreamPart(_recorder.GetAudioFileStream(), "source.wav", "audio/x-wav");
         }
 
         async void PermissionBtn_Clicked(object sender, EventArgs e)
