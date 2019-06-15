@@ -34,32 +34,19 @@ namespace voice2midi
 
         async void Handle_Clicked_1(object sender, System.EventArgs e)
         {
-            //Voice2midiService service = new Voice2midiService("http://192.168.2.246:5000");
-            Voice2midiService service = new Voice2midiService("http://vps662256.ovh.net:5000");
+            string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
+            Voice2midiService service = new Voice2midiService(baseUrl);
             try
             {
                 FileData fileData = await CrossFilePicker.Current.PickFile();
                 if (fileData == null)
                     return; // user canceled file picking
 
-                string fileName = fileData.FileName;
-                string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
-
-                System.Console.WriteLine("File name chosen: " + fileName);
-                System.Console.WriteLine("File data: " + contents);
-
-                var uploadTask = service.Upload_f(new StreamPart(fileData.GetStream(), "oui.wav", "audio/x-wav"));
-
-                var task = await uploadTask;
-                Console.WriteLine(task);
-                string json = await task.Content.ReadAsStringAsync();
-                Console.WriteLine(json);
-                SoundLinkList m = JsonConvert.DeserializeObject<SoundLinkList>(json);
-                Console.WriteLine(m.mp3Link);
+                SoundLinkList soundLinkList = await service.Upload_Generate_Sound(new StreamPart(fileData.GetStream(), "source.wav", "audio/x-wav"));
 
                 await Navigation.PushAsync(new PlayPage
                 {
-                    BindingContext = m
+                    BindingContext = soundLinkList
                 });
 
             }

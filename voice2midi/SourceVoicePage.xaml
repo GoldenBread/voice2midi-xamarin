@@ -7,7 +7,7 @@
             </StackLayout>
             <StackLayout Orientation="Vertical" VerticalOptions="Start" Padding="40, 40, 40, 40"> 
                 <Label Text="Record your sound or use your own file and convert it into musical notes"/>
-                <Label Text="To record your own voice, authorize the microphone permission and hold the record " />
+                <Label Text="To record your own voice, authorize the microphone permission and hold down the record button" />
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand"> 
                 <Label x:Name="InfoLbl"
