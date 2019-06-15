@@ -16,12 +16,13 @@ namespace voice2midi
         public SourceVoicePage()
         {
             InitializeComponent();
+
             _recorder = new AudioRecorderService
             {
                 TotalAudioTimeout = TimeSpan.FromSeconds(10),
                 StopRecordingOnSilence = false
             };
-            //_recorder.
+
             _player = new AudioPlayer();
             _player.FinishedPlaying += Player_Finished_Playing;
 
