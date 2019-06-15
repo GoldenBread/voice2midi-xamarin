@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Plugin.AudioRecorder;
 using Plugin.Permissions;
@@ -15,15 +16,15 @@ namespace voice2midi
     public partial class SourceVoicePage : ContentPage
     {
         AudioRecorderService _recorder;
-        ISimpleAudioPlayer _player;
+        AudioPlayer _player;
         Voice2midiService _service;
         StreamPart _audioSource;
 
-        public SourceVoicePage()
+        public SourceVoicePage(StreamPart fileStream = null)
         {
             InitializeComponent();
 
-            BindFromFile();
+            Bind_From_File(fileStream);
 
             _recorder = new AudioRecorderService
             {
@@ -31,24 +32,26 @@ namespace voice2midi
                 StopRecordingOnSilence = false
             };
 
-            _player = CrossSimpleAudioPlayer.Current;
-            _player.PlaybackEnded += Player_Finished_Playing;
+            _player = new AudioPlayer();
+            _player.FinishedPlaying += Player_Finished_Playing;
 
             _ = Check_Mic_Permission_Async();
 
             string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
             _service = new Voice2midiService(baseUrl);
+
         }
 
-        private void BindFromFile() //The page can be called with a file already selected
+        private void Bind_From_File(StreamPart fileStream) //The page can be called with a file already selected
         {
-            if (BindingContext != null)
+            if (fileStream != null)
             {
-                var stream = (StreamPart)BindingContext;
-                FiledLoadedLbl.Text = stream.FileName;
+                FiledLoadedLbl.Text = fileStream.FileName;
                 FileInfoLayout.IsVisible = true;
 
-                _audioSource = stream;
+                ConvertBtn.IsEnabled = true;
+
+                _audioSource = fileStream;
             }
         }
 
@@ -98,20 +101,16 @@ namespace voice2midi
         {
             SoundLinkList soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
 
-            await Navigation.PushAsync(new PlayPage
-            {
-                BindingContext = soundLinkList
-            });
+            await Navigation.PushAsync(new PlayPage(soundLinkList));
         }
 
         void PlayBtn_Clicked(object sender, EventArgs e)
         {
-            var stream = _audioSource?.Value; // Null conditionnal operator in case if _audioSource is null
+            var filePath = ((FileStream)(_audioSource?.Value))?.Name; // Null conditionnal operator in case if _audioSource is null. Stream cast to FileStream to get the Name property
             Edit_InfoLabel(true, "Now Playing...");
-            if (stream != null)
+            if (filePath != null)
             {
-                _player.Load(stream);
-                _player.Play();
+                _player.Play(filePath);
             }
         }
 

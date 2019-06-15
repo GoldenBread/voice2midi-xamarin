@@ -36,10 +36,7 @@ namespace voice2midi
                 if (fileData == null)
                     return; // user canceled file picking
 
-                await Navigation.PushAsync(new SourceVoicePage
-                {
-                    BindingContext = new StreamPart(fileData.GetStream(), fileData.FileName, "audio/x-wav")
-                });
+                await Navigation.PushAsync(new SourceVoicePage(new StreamPart(fileData.GetStream(), fileData.FileName, "audio/x-wav")));
 
             }
             catch (Exception ex)
