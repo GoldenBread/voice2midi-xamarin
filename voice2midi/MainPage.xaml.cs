@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IVoice2midi.Interfaces;
-using Newtonsoft.Json;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using Refit;
@@ -42,6 +36,7 @@ namespace voice2midi
                 if (fileData == null)
                     return; // user canceled file picking
 
+
                 SoundLinkList soundLinkList = await service.Upload_Generate_Sound(new StreamPart(fileData.GetStream(), "source.wav", "audio/x-wav"));
 
                 await Navigation.PushAsync(new PlayPage
@@ -52,7 +47,7 @@ namespace voice2midi
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine("Exception choosing file: " + ex.ToString());
+                Console.WriteLine("Exception choosing file: " + ex.ToString());
             }
         }
     }

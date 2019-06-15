@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Plugin.AudioRecorder;
 using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
+using Refit;
+using voice2midi.Models;
+using voice2midi.Services;
 using Xamarin.Forms;
 
 namespace voice2midi
@@ -12,6 +15,7 @@ namespace voice2midi
     {
         AudioRecorderService _recorder;
         AudioPlayer _player;
+        Voice2midiService _service;
 
         public SourceVoicePage()
         {
@@ -27,6 +31,9 @@ namespace voice2midi
             _player.FinishedPlaying += Player_Finished_Playing;
 
             _ = Check_Mic_Permission_Async();
+
+            string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
+            _service = new Voice2midiService(baseUrl);
         }
 
         private async Task Check_Mic_Permission_Async()
@@ -55,6 +62,7 @@ namespace voice2midi
                 {
                     Console.WriteLine("PermissionsStatus.Granted");
                     RecordBtn.IsEnabled = true;
+                    PermissionBtn.IsEnabled = false;
                 }
                 else
                 {
@@ -70,12 +78,17 @@ namespace voice2midi
 
         }
 
-        void StopBtn_Clicked(object sender, System.EventArgs e)
+        async void ConvertBtn_Clicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            SoundLinkList soundLinkList = await _service.Upload_Generate_Sound(new StreamPart(_recorder.GetAudioFileStream(), "source.wav", "audio/x-wav"));
+
+            await Navigation.PushAsync(new PlayPage
+            {
+                BindingContext = soundLinkList
+            });
         }
 
-        void PlayBtn_Clicked(object sender, System.EventArgs e)
+        void PlayBtn_Clicked(object sender, EventArgs e)
         {
             var filePath = _recorder.FilePath;
             if (filePath != null)
@@ -89,21 +102,21 @@ namespace voice2midi
             Edit_InfoLabel(false);
         }
 
-        async void RecordBtn_Pressed(object sender, System.EventArgs e)
+        async void RecordBtn_Pressed(object sender, EventArgs e)
         {
             Console.WriteLine("BtnPressed");
             await _recorder.StartRecording();
             Edit_InfoLabel(true, "Now Recording...");
         }
 
-        async void RecordBtn_Released(object sender, System.EventArgs e)
+        async void RecordBtn_Released(object sender, EventArgs e)
         {
             Console.WriteLine("BtnReleased");
             await _recorder.StopRecording();
             Edit_InfoLabel(false);
         }
 
-        async void PermissionBtn_Clicked(object sender, System.EventArgs e)
+        async void PermissionBtn_Clicked(object sender, EventArgs e)
         {
             await Ask_Mic_Permissions_Async();
         }
