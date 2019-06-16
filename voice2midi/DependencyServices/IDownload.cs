@@ -3,6 +3,8 @@ namespace voice2midi.DependencyServices
 {
     public interface IDownload
     {
-        void Define_Path();
+        string Define_Default_Path();
+
+        void DownloadUrl(string url);
     }
 }

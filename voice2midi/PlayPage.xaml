@@ -2,9 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="voice2midi.PlayPage">
     <ContentPage.Content>
         <StackLayout>
-            <Button Text="Play music" Clicked="Handle_Clicked" />
-            <Button x:Name="DownloadBtn" Text="Download Test" Clicked="Handle_Clicked_1" />
-            <Button x:Name="PermissionBtn" Text="Request write permission" Clicked="PermissionBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+            <StackLayout Padding="40">
+                <Button x:Name="DownloadMp3Btn" Text="Download .mp3" Clicked="DownloadBtn_Clicked" />
+                <Button x:Name="DownloadMidiBtn" Text="Download .midi" Clicked="DownloadBtn_Clicked" />
+                <Button x:Name="DownloadWavBtn" Text="Download Original .wav" Clicked="DownloadBtn_Clicked" />
+                <Button x:Name="PermissionBtn" Text="Request write permission" Clicked="PermissionBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+                <Label Text="Download path: " HorizontalOptions="CenterAndExpand"/>
+                <Label x:Name="DownloadPathInfoLbl" HorizontalOptions="CenterAndExpand"/>
+            </StackLayout>
+            <StackLayout VerticalOptions="End" Padding="40">
+                <Button Text="Play music" Clicked="PlayBtn_Clicked" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

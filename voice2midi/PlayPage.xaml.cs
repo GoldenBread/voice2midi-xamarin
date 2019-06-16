@@ -34,10 +34,21 @@ namespace voice2midi
                 _player.Load(audioStream);
             }
 
-            _ = RequestPermission.Check_Permission_Async(Permission.Storage, PermissionBtn, DownloadBtn);
+            _ = RequestPermission.Check_Permission_Async(
+                Permission.Storage,
+                PermissionBtn,
+                new Button[] { DownloadMp3Btn, DownloadMidiBtn, DownloadWavBtn });
+
+            SetupDownloadPath();
         }
 
-        void Handle_Clicked(object sender, EventArgs e)
+        private void SetupDownloadPath()
+        {
+            string path = DependencyService.Get<IDownload>().Define_Default_Path();
+            DownloadPathInfoLbl.Text = path;
+        }
+
+        void PlayBtn_Clicked(object sender, EventArgs e)
         {
             _player.Play();
         }
@@ -65,18 +76,24 @@ namespace voice2midi
             return response.GetResponseStream();
         }
 
-        void Handle_Clicked_1(object sender, EventArgs e)
+        void DownloadBtn_Clicked(object sender, EventArgs e)
         {
-            DependencyService.Get<IDownload>().Define_Path();
+            Button _sender = (Button)sender;
 
-            var downloadManager = CrossDownloadManager.Current;
-            var file2 = downloadManager.CreateDownloadFile(_soundLinks.mp3Link);
-            downloadManager.Start(file2);
+            if (_sender.Id == DownloadMp3Btn.Id)
+                DependencyService.Get<IDownload>().DownloadUrl(_soundLinks.mp3Link);
+            else if (_sender.Id == DownloadMidiBtn.Id)
+                DependencyService.Get<IDownload>().DownloadUrl(_soundLinks.midiLink);
+            else if (_sender.Id == DownloadWavBtn.Id)
+                DependencyService.Get<IDownload>().DownloadUrl(_soundLinks.originalWavLink);
         }
 
         async void PermissionBtn_Clicked(object sender, EventArgs e)
         {
-            await RequestPermission.Ask_Permissions_Async(Permission.Storage, PermissionBtn, DownloadBtn);
+            await RequestPermission.Ask_Permissions_Async(
+                Permission.Storage,
+                PermissionBtn,
+                new Button[] { DownloadMp3Btn, DownloadMidiBtn, DownloadWavBtn });
         }
 
     }
