@@ -10,6 +10,7 @@ using Plugin.SimpleAudioPlayer;
 using Refit;
 using voice2midi.Models;
 using voice2midi.Services;
+using voice2midi.SystemConf;
 using Xamarin.Forms;
 
 namespace voice2midi
@@ -36,7 +37,7 @@ namespace voice2midi
             _player = new AudioPlayer();
             _player.FinishedPlaying += Player_Finished_Playing;
 
-            _ = Check_Mic_Permission_Async();
+            _ = RequestPermission.Check_Permission_Async(Permission.Microphone, PermissionBtn, ConvertBtn);
 
             string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
             _service = new Voice2midiService(baseUrl);
@@ -54,48 +55,6 @@ namespace voice2midi
 
                 _audioSource = fileStream;
             }
-        }
-
-        private async Task Check_Mic_Permission_Async()
-        {
-            PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Microphone);
-            if (status == PermissionStatus.Granted)
-            {
-                RecordBtn.IsEnabled = true;
-                PermissionBtn.IsEnabled = false;
-            }
-        }
-
-        private async Task Ask_Mic_Permissions_Async()
-        {
-            try
-            {
-                PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Microphone);
-                if (status != PermissionStatus.Granted)
-                {
-                    Dictionary<Permission, PermissionStatus> results = await CrossPermissions.Current.RequestPermissionsAsync(Permission.Microphone);
-                    status = results[Permission.Microphone];
-                }
-                Console.WriteLine("\nPermissionsStatus");
-                Console.WriteLine(status);
-                if (status == PermissionStatus.Granted)
-                {
-                    Console.WriteLine("PermissionsStatus.Granted");
-                    RecordBtn.IsEnabled = true;
-                    PermissionBtn.IsEnabled = false;
-                }
-                else
-                {
-                    Console.WriteLine("Permission not granted");
-                    await Navigation.PopAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Exception attempting to ask permission:\n{ex}\n");
-                await Navigation.PopAsync();
-            }
-
         }
 
         async void ConvertBtn_Clicked(object sender, EventArgs e)
@@ -150,7 +109,7 @@ namespace voice2midi
 
         async void PermissionBtn_Clicked(object sender, EventArgs e)
         {
-            await Ask_Mic_Permissions_Async();
+            await RequestPermission.Ask_Permissions_Async(Permission.Microphone, PermissionBtn, ConvertBtn);
         }
 
         private void Edit_InfoLabel(bool visibility, string msg = "")
