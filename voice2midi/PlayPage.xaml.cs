@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Http;
-using Plugin.AudioRecorder;
+using System.Threading.Tasks;
+using Plugin.DownloadManager;
+using Plugin.DownloadManager.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using Plugin.SimpleAudioPlayer;
 using Plugin.Toast;
 using Plugin.Toast.Abstractions;
-using Refit;
+using voice2midi.DependencyServices;
 using voice2midi.Models;
+using voice2midi.SystemConf;
 using Xamarin.Forms;
 
 namespace voice2midi
@@ -15,10 +20,12 @@ namespace voice2midi
     public partial class PlayPage : ContentPage
     {
         ISimpleAudioPlayer _player;
+        SoundLinkList _soundLinks;
 
         public PlayPage(SoundLinkList soundLinks)
         {
             InitializeComponent();
+            _soundLinks = soundLinks;
             _player = CrossSimpleAudioPlayer.Current;
 
             var audioStream = Get_Stream(soundLinks.mp3Link);
@@ -26,6 +33,8 @@ namespace voice2midi
             {
                 _player.Load(audioStream);
             }
+
+            _ = RequestPermission.Check_Permission_Async(Permission.Storage, PermissionBtn, DownloadBtn);
         }
 
         void Handle_Clicked(object sender, EventArgs e)
@@ -55,5 +64,20 @@ namespace voice2midi
 
             return response.GetResponseStream();
         }
+
+        void Handle_Clicked_1(object sender, EventArgs e)
+        {
+            DependencyService.Get<IDownload>().Define_Path();
+
+            var downloadManager = CrossDownloadManager.Current;
+            var file2 = downloadManager.CreateDownloadFile(_soundLinks.mp3Link);
+            downloadManager.Start(file2);
+        }
+
+        async void PermissionBtn_Clicked(object sender, EventArgs e)
+        {
+            await RequestPermission.Ask_Permissions_Async(Permission.Storage, PermissionBtn, DownloadBtn);
+        }
+
     }
 }

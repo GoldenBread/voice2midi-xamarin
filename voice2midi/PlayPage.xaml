@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="voice2midi.PlayPage">
     <ContentPage.Content>
-        <Button Text="Play music" Clicked="Handle_Clicked" />
+        <StackLayout>
+            <Button Text="Play music" Clicked="Handle_Clicked" />
+            <Button x:Name="DownloadBtn" Text="Download Test" Clicked="Handle_Clicked_1" />
+            <Button x:Name="PermissionBtn" Text="Request write permission" Clicked="PermissionBtn_Clicked" HorizontalOptions="FillAndExpand"/>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

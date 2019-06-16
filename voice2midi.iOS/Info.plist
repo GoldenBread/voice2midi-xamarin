@@ -36,5 +36,10 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>voice2midi wants to use your microphone to record audio.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

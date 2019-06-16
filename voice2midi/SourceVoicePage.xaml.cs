@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Plugin.AudioRecorder;
@@ -91,7 +92,7 @@ namespace voice2midi
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Exception attempting to ask permission:\n{ex}\n");
+                Debug.WriteLine($"Exception attempting to ask permission:\n{ex}\n");
                 await Navigation.PopAsync();
             }
 
