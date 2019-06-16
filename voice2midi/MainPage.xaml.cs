@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
+using Plugin.Toast;
 using Refit;
 using voice2midi.Models;
 using voice2midi.Services;
@@ -28,13 +30,21 @@ namespace voice2midi
 
         async void Handle_Clicked_1(object sender, EventArgs e)
         {
-            string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
-            Voice2midiService service = new Voice2midiService(baseUrl);
             try
             {
                 FileData fileData = await CrossFilePicker.Current.PickFile();
                 if (fileData == null)
+                {
                     return; // user canceled file picking
+                }
+                if (Path.GetExtension(fileData.FilePath) != ".wav")
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        CrossToastPopUp.Current.ShowToastError("Accept only .wav files");
+                    });
+                    return;
+                }
 
                 await Navigation.PushAsync(new SourceVoicePage(new StreamPart(fileData.GetStream(), fileData.FileName, "audio/x-wav")));
 

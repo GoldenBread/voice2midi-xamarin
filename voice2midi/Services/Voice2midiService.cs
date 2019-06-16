@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using IVoice2midi.Interfaces;
 using Newtonsoft.Json;
+using Plugin.Toast;
+using Plugin.Toast.Abstractions;
 using Refit;
 using voice2midi.Models;
+using Xamarin.Forms;
 
 namespace voice2midi.Services
 {
@@ -19,9 +23,20 @@ namespace voice2midi.Services
 
         public async Task<SoundLinkList> Upload_Generate_Sound(StreamPart stream)
         {
-            var task = await _api.UploadSound(stream).ConfigureAwait(false);
+            HttpResponseMessage task;
+            try
+            {
+                task = await _api.UploadSound(stream).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    CrossToastPopUp.Current.ShowToastError($"Error from remote server: \n{e.Message}", ToastLength.Long);
+                });
+                return null;
+            }
 
-            Console.WriteLine(task);
             if (task.StatusCode != HttpStatusCode.OK)
                 return null;
 
