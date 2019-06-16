@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using IVoice2midi.Interfaces;
 using Newtonsoft.Json;
@@ -21,6 +22,9 @@ namespace voice2midi.Services
             var task = await _api.UploadSound(stream).ConfigureAwait(false);
 
             Console.WriteLine(task);
+            if (task.StatusCode != HttpStatusCode.OK)
+                return null;
+
             string json = await task.Content.ReadAsStringAsync();
             Console.WriteLine(json);
             SoundLinkList soundLink = JsonConvert.DeserializeObject<SoundLinkList>(json);

@@ -19,7 +19,10 @@ namespace voice2midi
             _player = CrossSimpleAudioPlayer.Current;
 
             var audioStream = Get_Stream(soundLinks.mp3Link);
-            _player.Load(audioStream);
+            if (audioStream != null)
+            {
+                _player.Load(audioStream);
+            }
         }
 
         void Handle_Clicked(object sender, EventArgs e)
@@ -31,6 +34,9 @@ namespace voice2midi
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            if (response.StatusCode != HttpStatusCode.OK)
+                return null;
 
             return response.GetResponseStream();
         }

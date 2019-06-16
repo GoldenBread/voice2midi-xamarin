@@ -99,9 +99,14 @@ namespace voice2midi
 
         async void ConvertBtn_Clicked(object sender, EventArgs e)
         {
+            Edit_Loading_Indicator(true);
             SoundLinkList soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
+            Edit_Loading_Indicator(false);
 
-            await Navigation.PushAsync(new PlayPage(soundLinkList));
+            if (soundLinkList != null)
+            {
+                await Navigation.PushAsync(new PlayPage(soundLinkList));
+            }
         }
 
         void PlayBtn_Clicked(object sender, EventArgs e)
@@ -153,12 +158,20 @@ namespace voice2midi
             InfoLbl.IsVisible = visibility;
         }
 
+        private void Edit_Loading_Indicator(bool visibility)
+        {
+            LoadingIdctr.IsRunning = visibility;
+            InfoLbl.IsVisible = visibility;
+            InfoLbl.Text = "Loading...";
+        }
+
         protected override void OnAppearing() // When coming from PlayPage, the audio_source stream closes. Disabling ConvertBtn to prevent errors.
         {
-            if (!_audioSource.Value.CanRead)
+            if (!(_audioSource?.Value.CanRead ?? false)) // Null coalescing operator mixed with null conditional operator
             {
                 PlayBtn.IsEnabled = false;
                 ConvertBtn.IsEnabled = false;
+                FileInfoLayout.IsVisible = false;
             }
         }
 

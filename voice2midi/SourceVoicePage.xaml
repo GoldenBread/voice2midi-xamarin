@@ -9,7 +9,9 @@
                 <Label Text="Record your sound or use your own file and convert it into musical notes"/>
                 <Label Text="To record your own voice, authorize the microphone permission and hold down the record button" />
             </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand"> 
+            <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand"> 
+                <ActivityIndicator x:Name="LoadingIdctr" Color="Red"
+                                   IsRunning="false"/>
                 <Label x:Name="InfoLbl"
                        TextColor="Red"
                        FontSize="Large"
