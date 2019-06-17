@@ -23,12 +23,12 @@ namespace voice2midi
 
         }
 
-        async void Handle_Clicked(object sender, EventArgs e)
+        async void RecordBtn_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new SourceVoicePage());
         }
 
-        async void Handle_Clicked_1(object sender, EventArgs e)
+        async void SendFileBtn_Clicked(object sender, EventArgs e)
         {
             try
             {
@@ -54,5 +54,11 @@ namespace voice2midi
                 Console.WriteLine("Exception choosing file: " + ex.ToString());
             }
         }
+
+        async void ListSoundsBtn_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new SoundListPage());
+        }
+
     }
 }

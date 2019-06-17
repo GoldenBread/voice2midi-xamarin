@@ -23,10 +23,10 @@ namespace voice2midi.Services
 
         public async Task<SoundLinkList> Upload_Generate_Sound(StreamPart stream)
         {
-            HttpResponseMessage task;
             try
             {
-                task = await _api.UploadSound(stream).ConfigureAwait(false);
+                SoundLinkList soundLink = await _api.UploadGenerate(stream).ConfigureAwait(false);
+                return soundLink;
             }
             catch (Exception e)
             {
@@ -36,15 +36,23 @@ namespace voice2midi.Services
                 });
                 return null;
             }
+        }
 
-            if (task.StatusCode != HttpStatusCode.OK)
+        public async Task<SoundLinkLists> Sound_List()
+        {
+            try
+            {
+                SoundLinkLists soundLinks = await _api.SoundList().ConfigureAwait(false);
+                return soundLinks;
+            }
+            catch (Exception e)
+            {
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    CrossToastPopUp.Current.ShowToastError($"Error from remote server: \n{e.Message}", ToastLength.Long);
+                });
                 return null;
-
-            string json = await task.Content.ReadAsStringAsync();
-            Console.WriteLine(json);
-            SoundLinkList soundLink = JsonConvert.DeserializeObject<SoundLinkList>(json);
-
-            return soundLink;
+            }
         }
     }
 }

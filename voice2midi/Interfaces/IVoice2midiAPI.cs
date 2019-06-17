@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Refit;
+using voice2midi.Models;
 
 namespace IVoice2midi.Interfaces
 {
@@ -9,6 +10,9 @@ namespace IVoice2midi.Interfaces
     {
         [Multipart]
         [Post("/upload_generate")]
-        Task<HttpResponseMessage> UploadSound([AliasAs("file")] StreamPart stream);
+        Task<SoundLinkList> UploadGenerate([AliasAs("file")] StreamPart stream);
+
+        [Get("/sound_list")]
+        Task<SoundLinkLists> SoundList();
     }
 }

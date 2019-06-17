@@ -29,4 +29,7 @@
     <Folder Include="DependencyServices\" />
     <Folder Include="SystemConf\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="SoundListPage.cs" />
+  </ItemGroup>
 </Project>
