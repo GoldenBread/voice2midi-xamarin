@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using Plugin.AudioRecorder;
-using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
-using Plugin.SimpleAudioPlayer;
 using Refit;
 using voice2midi.Models;
 using voice2midi.Services;
@@ -91,14 +86,12 @@ namespace voice2midi
                 FileInfoLayout.IsVisible = false;
             }
 
-            Console.WriteLine("BtnPressed");
             await _recorder.StartRecording();
             Edit_InfoLabel(true, "Now Recording...");
         }
 
         async void RecordBtn_Released(object sender, EventArgs e)
         {
-            Console.WriteLine("BtnReleased");
             await _recorder.StopRecording();
             Edit_InfoLabel(false);
             ConvertBtn.IsEnabled = true;

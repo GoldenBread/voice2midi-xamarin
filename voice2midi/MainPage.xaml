@@ -1,10 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:voice2midi" x:Class="voice2midi.MainPage">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:voice2midi" 
+             x:Class="voice2midi.MainPage"
+             xmlns:xamvvm="clr-namespace:Xamvvm;assembly=Xamvvm.Forms"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms">
     <StackLayout>
         <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
-        <Button Text="Record sound" Clicked="RecordBtn_Clicked" />
-        <Button Text="Send file" Clicked="SendFileBtn_Clicked" />
-        <Button Text="List sounds" Clicked="ListSoundsBtn_Clicked" />
+        <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand">
+            <ffimageloading:CachedImage HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                                        WidthRequest="300" HeightRequest="300"
+                                        Source = "resource://voice2midi.Assets.voice2midiLogo.png">
+            </ffimageloading:CachedImage>
+        </StackLayout>
+        <StackLayout VerticalOptions="CenterAndExpand" Padding="20">
+            <Label Text="A melody in mind? Record your voice to get musical notes through a Midi file." HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+            <Label Text="You can even transform simple wav files into Midi notes." HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+        <StackLayout Padding="40" VerticalOptions="End">
+            <Button Text="Record sound" Clicked="RecordBtn_Clicked" />
+            <Button Text="Send file" Clicked="SendFileBtn_Clicked" />
+            <Button Text="List sounds" Clicked="ListSoundsBtn_Clicked" />
+        </StackLayout>
     </StackLayout>
 </ContentPage>

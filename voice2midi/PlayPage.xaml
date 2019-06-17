@@ -8,7 +8,7 @@
                 <Button x:Name="DownloadWavBtn" Text="Download Original .wav" Clicked="DownloadBtn_Clicked" />
                 <Button x:Name="PermissionBtn" Text="Request write permission" Clicked="PermissionBtn_Clicked" HorizontalOptions="FillAndExpand"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+            <StackLayout Orientation="Vertical" VerticalOptions="CenterAndExpand" Padding="10">
                 <Label Text="Download path: " HorizontalOptions="CenterAndExpand"/>
                 <Label x:Name="DownloadPathInfoLbl" HorizontalOptions="CenterAndExpand"/>
             </StackLayout>

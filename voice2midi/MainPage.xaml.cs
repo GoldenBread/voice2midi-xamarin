@@ -5,8 +5,6 @@ using Plugin.FilePicker;
 using Plugin.FilePicker.Abstractions;
 using Plugin.Toast;
 using Refit;
-using voice2midi.Models;
-using voice2midi.Services;
 using Xamarin.Forms;
 
 namespace voice2midi

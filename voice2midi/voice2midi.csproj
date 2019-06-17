@@ -21,6 +21,10 @@
     <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
     <PackageReference Include="Plugin.Toast" Version="2.1.2" />
     <PackageReference Include="Xam.Plugins.DownloadManager" Version="1.4.0" />
+    <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
+    <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
+    <PackageReference Include="Xamarin.FFImageLoading.Svg" Version="2.4.11.982" />
+    <PackageReference Include="Xamarin.FFImageLoading" Version="2.4.11.982" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -28,8 +32,16 @@
     <Folder Include="Services\" />
     <Folder Include="DependencyServices\" />
     <Folder Include="SystemConf\" />
+    <Folder Include="Assets\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="SoundListPage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="voice2midiLogo.svg" />
+    <None Remove="Assets\voice2midiLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets\voice2midiLogo.png" />
   </ItemGroup>
 </Project>
