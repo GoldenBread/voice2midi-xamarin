@@ -19,6 +19,8 @@ namespace voice2midi
 
             string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
             _service = new Voice2midiService(baseUrl);
+
+            SoundListView.ItemTapped += OnItemListTap;
         }
 
         protected override void OnAppearing()
@@ -26,18 +28,16 @@ namespace voice2midi
             base.OnAppearing();
 
             _ = Update_ListAsync();
-
-            SoundListView.ItemTapped += OnItemListTapAsync;
         }
 
-        private async void OnItemListTapAsync(object sender, EventArgs e)
+        private void OnItemListTap(object sender, EventArgs e)
         {
             ItemTappedEventArgs item = (ItemTappedEventArgs)e;
             SoundLinkList selectedList = (SoundLinkList)item.Item;
 
             if (selectedList != null)
             {
-                await Navigation.PushAsync(new PlayPage(selectedList));
+                Navigation.PushAsync(new PlayPage(selectedList));
             }
         }
 
