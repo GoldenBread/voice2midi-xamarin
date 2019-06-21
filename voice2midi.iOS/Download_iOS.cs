@@ -3,6 +3,7 @@ using System.IO;
 using Foundation;
 using Plugin.DownloadManager;
 using Plugin.DownloadManager.Abstractions;
+using Plugin.Toast;
 using voice2midi.DependencyServices;
 using voice2midi.iOS;
 using Xamarin.Forms;
@@ -28,7 +29,32 @@ namespace voice2midi.iOS
 
         public void DownloadUrl(string url)
         {
-            throw new NotImplementedException();
+            var downloadManager = CrossDownloadManager.Current;
+            var file = downloadManager.CreateDownloadFile(url);
+            file.PropertyChanged += (sender, _e1) =>
+            {
+                DownloadFileImplementation dfi = (DownloadFileImplementation)sender;
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    switch (dfi.Status)
+                    {
+                        case DownloadFileStatus.COMPLETED:
+                            CrossToastPopUp.Current.ShowToastSuccess("Download completed");
+                            break;
+                        case DownloadFileStatus.CANCELED:
+                            CrossToastPopUp.Current.ShowToastError("Download canceled");
+                            break;
+                        case DownloadFileStatus.FAILED:
+                            CrossToastPopUp.Current.ShowToastError("Download failed");
+                            break;
+                    }
+                });
+
+
+            };
+            downloadManager.Start(file);
+
         }
     }
 }

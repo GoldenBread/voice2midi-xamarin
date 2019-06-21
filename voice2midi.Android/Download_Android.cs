@@ -44,10 +44,10 @@ namespace voice2midi.Droid
                             CrossToastPopUp.Current.ShowToastSuccess("Download completed");
                             break;
                         case DownloadFileStatus.CANCELED:
-                            CrossToastPopUp.Current.ShowToastSuccess("Download canceled");
+                            CrossToastPopUp.Current.ShowToastError("Download canceled");
                             break;
                         case DownloadFileStatus.FAILED:
-                            CrossToastPopUp.Current.ShowToastSuccess("Download failed");
+                            CrossToastPopUp.Current.ShowToastError("Download failed");
                             break;
                     }
                 });
