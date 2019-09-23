@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Plugin.DownloadManager;
-using Plugin.DownloadManager.Abstractions;
-using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using Plugin.SimpleAudioPlayer;
 using Plugin.Toast;
@@ -20,15 +17,15 @@ namespace voice2midi
     public partial class PlayPage : ContentPage
     {
         ISimpleAudioPlayer _player;
-        SoundLinkList _soundLinks;
+        List<FileModelShort> _soundLinks;
 
-        public PlayPage(SoundLinkList soundLinks)
+        public PlayPage(List<FileModelShort> soundLinks)
         {
             InitializeComponent();
             _soundLinks = soundLinks;
             _player = CrossSimpleAudioPlayer.Current;
 
-            var audioStream = Get_Stream(soundLinks.mp3Link);
+            var audioStream = Get_Stream(GetDownloadLink(".mp3"));
             if (audioStream != null)
             {
                 _player.Load(audioStream);
@@ -48,7 +45,7 @@ namespace voice2midi
             DownloadPathInfoLbl.Text = path;
         }
 
-        void PlayBtn_Clicked(object sender, EventArgs e)
+        public void PlayBtn_Clicked(object sender, EventArgs e)
         {
             _player.Play();
         }
@@ -76,19 +73,29 @@ namespace voice2midi
             return response.GetResponseStream();
         }
 
-        void DownloadBtn_Clicked(object sender, EventArgs e)
+        public void DownloadBtn_Clicked(object sender, EventArgs e)
         {
             Button _sender = (Button)sender;
 
             if (_sender.Id == DownloadMp3Btn.Id)
-                DependencyService.Get<IDownload>().DownloadUrl(_soundLinks.mp3Link);
+                DependencyService.Get<IDownload>().DownloadUrl(GetDownloadLink(".mp3"));
             else if (_sender.Id == DownloadMidiBtn.Id)
-                DependencyService.Get<IDownload>().DownloadUrl(_soundLinks.midiLink);
+                DependencyService.Get<IDownload>().DownloadUrl(GetDownloadLink(".mid"));
             else if (_sender.Id == DownloadWavBtn.Id)
-                DependencyService.Get<IDownload>().DownloadUrl(_soundLinks.originalWavLink);
+                DependencyService.Get<IDownload>().DownloadUrl(GetDownloadLink(".wav"));
         }
 
-        async void PermissionBtn_Clicked(object sender, EventArgs e)
+        private string GetDownloadLink(string fileExtension)
+        {
+            string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
+            long id = _soundLinks
+                .Where(x => x.FileExtension == fileExtension)
+                .Select(x => x.Id)
+                .First();
+            return $"{baseUrl}/{id}/download";
+        }
+
+        public async void PermissionBtn_Clicked(object sender, EventArgs e)
         {
             await RequestPermission.Ask_Permissions_Async(
                 Permission.Storage,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Plugin.AudioRecorder;
 using Plugin.Permissions.Abstractions;
@@ -55,7 +56,7 @@ namespace voice2midi
         async void ConvertBtn_Clicked(object sender, EventArgs e)
         {
             Edit_Loading_Indicator(true);
-            SoundLinkList soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
+            var soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
             Edit_Loading_Indicator(false);
 
             if (soundLinkList != null)

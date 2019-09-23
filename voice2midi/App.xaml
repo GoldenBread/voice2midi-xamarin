@@ -3,7 +3,8 @@
     <Application.Resources>
         <ResourceDictionary>
             
-            <x:String x:Key="voice2midi_base_url">http://vps662256.ovh.net:5000</x:String>
+          <!--  <x:String x:Key="voice2midi_base_url">http://vps662256.ovh.net:5000</x:String> -->
+            <x:String x:Key="voice2midi_base_url">https://localhost:5001/api</x:String>
         
         </ResourceDictionary>
     </Application.Resources>

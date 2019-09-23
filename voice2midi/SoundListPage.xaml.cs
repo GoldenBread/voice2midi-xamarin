@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using voice2midi.Models;
@@ -10,8 +11,8 @@ namespace voice2midi
     public partial class SoundListPage : ContentPage
     {
         Voice2midiService _service;
-        ObservableCollection<SoundLinkList> _soundLinkLists;
-        public ObservableCollection<SoundLinkList> SoundLinkLists { get { return _soundLinkLists; } }//Bind with ListView
+        ObservableCollection<List<FileModelShort>> _soundLinkLists;
+        public ObservableCollection<List<FileModelShort>> SoundLinkLists { get { return _soundLinkLists; } }//Bind with ListView
 
         public SoundListPage()
         {
@@ -33,7 +34,7 @@ namespace voice2midi
         private void OnItemListTap(object sender, EventArgs e)
         {
             ItemTappedEventArgs item = (ItemTappedEventArgs)e;
-            SoundLinkList selectedList = (SoundLinkList)item.Item;
+            List<FileModelShort> selectedList = (List<FileModelShort>)item.Item;
 
             if (selectedList != null)
             {
@@ -43,10 +44,11 @@ namespace voice2midi
 
         private async Task Update_ListAsync()
         {
-            SoundLinkLists soundLinkLists = await _service.Sound_List();
+            var soundLinkLists = await _service.Sound_List();
 
-            _soundLinkLists = new ObservableCollection<SoundLinkList>(soundLinkLists.soundLinkLists);
+            _soundLinkLists = new ObservableCollection<List<FileModelShort>>(soundLinkLists);
             SoundListView.ItemsSource = _soundLinkLists;
+            //SoundListView.ItemsSource = soundLinkLists;
         }
     }
 }

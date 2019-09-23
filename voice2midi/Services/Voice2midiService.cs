@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using IVoice2midi.Interfaces;
-using Newtonsoft.Json;
 using Plugin.Toast;
 using Plugin.Toast.Abstractions;
 using Refit;
@@ -21,11 +20,11 @@ namespace voice2midi.Services
             _api = RestService.For<IVoice2midiAPI>(baseUrl);
         }
 
-        public async Task<SoundLinkList> Upload_Generate_Sound(StreamPart stream)
+        public async Task<List<FileModelShort>> Upload_Generate_Sound(StreamPart stream)
         {
             try
             {
-                SoundLinkList soundLink = await _api.UploadGenerate(stream).ConfigureAwait(false);
+                List<FileModelShort> soundLink = await _api.UploadGenerate(stream).ConfigureAwait(false);
                 return soundLink;
             }
             catch (Exception e)
@@ -38,11 +37,11 @@ namespace voice2midi.Services
             }
         }
 
-        public async Task<SoundLinkLists> Sound_List()
+        public async Task<List<List<FileModelShort>>> Sound_List()
         {
             try
             {
-                SoundLinkLists soundLinks = await _api.SoundList().ConfigureAwait(false);
+                var soundLinks = await _api.SoundList().ConfigureAwait(false);
                 return soundLinks;
             }
             catch (Exception e)
