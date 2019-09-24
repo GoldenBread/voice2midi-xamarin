@@ -9,10 +9,10 @@ namespace IVoice2midi.Interfaces
     public interface IVoice2midiAPI
     {
         [Multipart]
-        [Post("/upload")]
+        [Post("/api/upload")]
         Task<List<FileModelShort>> UploadGenerate([AliasAs("file")] StreamPart stream);
 
-        [Get("/files/list")]
+        [Get("/api/files/list")]
         Task<List<List<FileModelShort>>> SoundList();
     }
 }

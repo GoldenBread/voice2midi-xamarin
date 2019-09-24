@@ -92,7 +92,7 @@ namespace voice2midi
                 .Where(x => x.FileExtension == fileExtension)
                 .Select(x => x.Id)
                 .First();
-            return $"{baseUrl}/{id}/download";
+            return $"{baseUrl}/api/files/{id}/download";
         }
 
         public async void PermissionBtn_Clicked(object sender, EventArgs e)

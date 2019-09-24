@@ -18,7 +18,6 @@ namespace voice2midi
         public MainPage()
         {
             InitializeComponent();
-
         }
 
         async void RecordBtn_Clicked(object sender, EventArgs e)

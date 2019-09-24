@@ -8,7 +8,7 @@
         <ListView x:Name="SoundListView" SelectionMode="None" ItemsSource="{Binding SoundLinkLists}">
             <ListView.ItemTemplate>
               <DataTemplate>
-                <TextCell Text="{Binding soundId}" />
+                <TextCell Text="{Binding [0].Filename}" />
               </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

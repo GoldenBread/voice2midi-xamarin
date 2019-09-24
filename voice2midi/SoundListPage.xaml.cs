@@ -45,7 +45,6 @@ namespace voice2midi
         private async Task Update_ListAsync()
         {
             var soundLinkLists = await _service.Sound_List();
-
             _soundLinkLists = new ObservableCollection<List<FileModelShort>>(soundLinkLists);
             SoundListView.ItemsSource = _soundLinkLists;
             //SoundListView.ItemsSource = soundLinkLists;
