@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using IVoice2midi.Interfaces;
 using Plugin.Toast;
@@ -20,24 +19,35 @@ namespace voice2midi.Services
             _api = RestService.For<IVoice2midiAPI>(baseUrl);
         }
 
-        public async Task<List<FileModelShort>> Upload_Generate_Sound(StreamPart stream)
+        public async Task<FileUploadModel> UploadSound(StreamPart stream)
         {
             try
             {
-                List<FileModelShort> soundLink = await _api.UploadGenerate(stream).ConfigureAwait(false);
-                return soundLink;
+                FileUploadModel fileUploadModel = await _api.Upload(stream).ConfigureAwait(false);
+                return fileUploadModel;
             }
             catch (Exception e)
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    CrossToastPopUp.Current.ShowToastError($"Error from remote server: \n{e.Message}", ToastLength.Long);
-                });
+                RemoteServerError(e);
                 return null;
             }
         }
 
-        public async Task<List<List<FileModelShort>>> Sound_List()
+        public async Task<FileGenerationModel> GenerateSound(string format, long id)
+        {
+            try
+            {
+                FileGenerationModel generationModel = await _api.Generate(format, id).ConfigureAwait(false);
+                return generationModel;
+            }
+            catch (Exception e)
+            {
+                RemoteServerError(e);
+                return null;
+            }
+        }
+
+        public async Task<List<List<FileModelShort>>> SoundList()
         {
             try
             {
@@ -46,12 +56,31 @@ namespace voice2midi.Services
             }
             catch (Exception e)
             {
-                Device.BeginInvokeOnMainThread(() =>
-                {
-                    CrossToastPopUp.Current.ShowToastError($"Error from remote server: \n{e.Message}", ToastLength.Long);
-                });
+                RemoteServerError(e);
                 return null;
             }
+        }
+
+        public async Task<List<FileModelShort>> SoundListSameSource(long id)
+        {
+            try
+            {
+                var soundLinks = await _api.SoundListSameSource(id).ConfigureAwait(false);
+                return soundLinks;
+            }
+            catch (Exception e)
+            {
+                RemoteServerError(e);
+                return null;
+            }
+        }
+
+        private void RemoteServerError(Exception e)
+        {
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                CrossToastPopUp.Current.ShowToastError($"Error from remote server: \n{e.Message}", ToastLength.Long);
+            });
         }
     }
 }

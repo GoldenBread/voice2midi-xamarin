@@ -13,7 +13,7 @@
                 <Label x:Name="DownloadPathInfoLbl" HorizontalOptions="CenterAndExpand"/>
             </StackLayout>
             <StackLayout VerticalOptions="End" Padding="40">
-                <Button Text="Play music" Clicked="PlayBtn_Clicked" />
+                <Button x:Name="PlayMusicBtn" Text="Play music" Clicked="PlayBtn_Clicked" IsEnabled="False" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

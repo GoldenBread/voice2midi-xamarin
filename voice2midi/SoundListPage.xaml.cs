@@ -24,27 +24,27 @@ namespace voice2midi
             SoundListView.ItemTapped += OnItemListTap;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            _ = Update_ListAsync();
+            await Update_ListAsync();
         }
 
-        private void OnItemListTap(object sender, EventArgs e)
+        private async void OnItemListTap(object sender, EventArgs e)
         {
             ItemTappedEventArgs item = (ItemTappedEventArgs)e;
             List<FileModelShort> selectedList = (List<FileModelShort>)item.Item;
 
             if (selectedList != null)
             {
-                Navigation.PushAsync(new PlayPage(selectedList));
+                await Navigation.PushAsync(new PlayPage(selectedList));
             }
         }
 
         private async Task Update_ListAsync()
         {
-            var soundLinkLists = await _service.Sound_List();
+            var soundLinkLists = await _service.SoundList();
             _soundLinkLists = new ObservableCollection<List<FileModelShort>>(soundLinkLists);
             SoundListView.ItemsSource = _soundLinkLists;
             //SoundListView.ItemsSource = soundLinkLists;

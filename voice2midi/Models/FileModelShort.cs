@@ -6,18 +6,6 @@ namespace voice2midi.Models
 {
     public class FileModelShort
     {
-/*        [JsonProperty(PropertyName = "sound_id")]
-        public string soundId { get; set; }
-
-        [JsonProperty(PropertyName = "original_wav_link")]
-        public string originalWavLink { get; set; }
-
-        [JsonProperty(PropertyName = "mp3_link")]
-        public string mp3Link { get; set; }
-
-        [JsonProperty(PropertyName = "midi_link")]
-        public string midiLink { get; set; }
-*/
         [JsonProperty(PropertyName = "id")]
         public long Id { get; set; }
 

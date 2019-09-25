@@ -13,10 +13,6 @@ namespace voice2midi.Droid
 {
     public class Download_Android: IDownload
     {
-        public Download_Android()
-        {
-        }
-
         public string Define_Default_Path()
         {
             CrossDownloadManager.Current.PathNameForDownloadedFile = new Func<IDownloadFile, string>(file => {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Plugin.Permissions.Abstractions;
 using Plugin.SimpleAudioPlayer;
 using Plugin.Toast;
@@ -25,11 +26,6 @@ namespace voice2midi
             _soundLinks = soundLinks;
             _player = CrossSimpleAudioPlayer.Current;
 
-            var audioStream = Get_Stream(GetDownloadLink(".mp3"));
-            if (audioStream != null)
-            {
-                _player.Load(audioStream);
-            }
 
             _ = RequestPermission.Check_Permission_Async(
                 Permission.Storage,
@@ -37,6 +33,39 @@ namespace voice2midi
                 new Button[] { DownloadMp3Btn, DownloadMidiBtn, DownloadWavBtn });
 
             SetupDownloadPath();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            await InitAudioPlayer();
+        }
+
+        private async Task InitAudioPlayer()
+        {
+            var audioStream = Get_Stream(GetDownloadLink(".mp3"));
+            if (audioStream != null)
+            {
+                var loadPlayerAsync = Task.Run(() => _player.Load(audioStream));// Vary on connection speed
+                await loadPlayerAsync.ContinueWith(previous => PlayMusicBtnEnabler(audioStream));
+            }
+        }
+
+        private void PlayMusicBtnEnabler(Stream audioStream)
+        {
+            Console.WriteLine("audioStream.CanRead" + audioStream.CanRead);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                if (audioStream != null && audioStream.CanRead)
+                {
+                    PlayMusicBtn.IsEnabled = true;
+                }
+                else
+                {
+                    PlayMusicBtn.IsEnabled = false;
+                }
+            });
         }
 
         private void SetupDownloadPath()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Plugin.AudioRecorder;
 using Plugin.Permissions.Abstractions;
 using Refit;
@@ -55,14 +56,31 @@ namespace voice2midi
 
         async void ConvertBtn_Clicked(object sender, EventArgs e)
         {
-            Edit_Loading_Indicator(true);
-            var soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
-            Edit_Loading_Indicator(false);
+            Edit_Loading_Indicator(true, "Uploading file");
+            FileUploadModel fileUploadModel = await _service.UploadSound(_audioSource);
+            FileGenerationModel fileGenerationModelMidi = await _service.GenerateSound("midi", fileUploadModel.FileId);
+            _service.GenerateSound("mp3", fileGenerationModelMidi.FileOutId).Wait();
 
-            if (soundLinkList != null)
+
+            
+
+            List<FileModelShort> soundLinkList = await _service.SoundListSameSource(fileUploadModel.FileId);
+            await Navigation.PushAsync(new PlayPage(soundLinkList));
+
+            /*var soundLinkList = await await _service.Upload_Generate_Sound(_audioSource).ContinueWith(soundll =>
             {
-                await Navigation.PushAsync(new PlayPage(soundLinkList));
-            }
+                Edit_Loading_Indicator(true, "Generating .mid");
+                return soundll;
+            });
+
+/*            var soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
+            Edit_Loading_Indicator(true, "Generating .mp3");
+            var soundLinkList = await _service.Upload_Generate_Sound(_audioSource);*/
+
+            /*            if (soundLinkList != null)
+                        {
+                            await Navigation.PushAsync(new PlayPage(soundLinkList));
+                        }*/
         }
 
         void PlayBtn_Clicked(object sender, EventArgs e)
@@ -112,14 +130,14 @@ namespace voice2midi
             InfoLbl.IsVisible = visibility;
         }
 
-        private void Edit_Loading_Indicator(bool visibility)
+        private void Edit_Loading_Indicator(bool visibility, string text = "Loading...")
         {
             LoadingIdctr.IsRunning = visibility;
             InfoLbl.IsVisible = visibility;
-            InfoLbl.Text = "Loading...";
+            InfoLbl.Text = text;
         }
 
-        protected override void OnAppearing() // When coming from PlayPage, the audio_source stream closes. Disabling ConvertBtn to prevent errors.
+        protected override void OnAppearing()
         {
             if (!(_audioSource?.Value.CanRead ?? false)) // Null coalescing operator mixed with null conditional operator
             {
