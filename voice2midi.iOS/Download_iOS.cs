@@ -6,6 +6,7 @@ using Plugin.DownloadManager.Abstractions;
 using Plugin.Toast;
 using voice2midi.DependencyServices;
 using voice2midi.iOS;
+using voice2midi.Models;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(Download_iOS))]
@@ -13,24 +14,26 @@ namespace voice2midi.iOS
 {
     public class Download_iOS: IDownload
     {
-        public Download_iOS()
+        public string GetDefaultPath()
         {
-        }
-
-        public string Define_Default_Path()
-        {
-            CrossDownloadManager.Current.PathNameForDownloadedFile = new Func<IDownloadFile, string>(file => {
-                string fileName = (new NSUrl(file.Url, false)).LastPathComponent;
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName);
-            });
-
             return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         }
 
-        public void DownloadUrl(string url)
+        private void SetFileExtension(string fileExtension)
         {
+            CrossDownloadManager.Current.PathNameForDownloadedFile = new Func<IDownloadFile, string>(file => {
+                string fileName = (new NSUrl(file.Url, false)).LastPathComponent;
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), fileName + fileExtension);
+            });
+        }
+
+
+        public void DownloadUrl(FileUrlStruct fileUrl)
+        {
+            SetFileExtension(fileUrl.FileExtension);
             var downloadManager = CrossDownloadManager.Current;
-            var file = downloadManager.CreateDownloadFile(url);
+
+            var file = downloadManager.CreateDownloadFile(fileUrl.Url);
             file.PropertyChanged += (sender, _e1) =>
             {
                 DownloadFileImplementation dfi = (DownloadFileImplementation)sender;
@@ -39,6 +42,9 @@ namespace voice2midi.iOS
                 {
                     switch (dfi.Status)
                     {
+                        case DownloadFileStatus.RUNNING:
+                            CrossToastPopUp.Current.ShowToastSuccess($"Download running... {Math.Floor(dfi.TotalBytesWritten * 100 / dfi.TotalBytesExpected)}%");
+                            break;
                         case DownloadFileStatus.COMPLETED:
                             CrossToastPopUp.Current.ShowToastSuccess("Download completed");
                             break;

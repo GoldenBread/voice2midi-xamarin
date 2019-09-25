@@ -4,7 +4,7 @@
         <ResourceDictionary>
             
           <!--  <x:String x:Key="voice2midi_base_url">http://vps662256.ovh.net:5000</x:String> -->
-            <x:String x:Key="voice2midi_base_url">https://06c86a38.ngrok.io</x:String>
+            <x:String x:Key="voice2midi_base_url">https://227261b1.ngrok.io</x:String>
         
         </ResourceDictionary>
     </Application.Resources>

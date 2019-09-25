@@ -44,7 +44,7 @@ namespace voice2midi
 
         private async Task InitAudioPlayer()
         {
-            var audioStream = Get_Stream(GetDownloadLink(".mp3"));
+            var audioStream = Get_Stream(GetDownloadLink(".mp3").Url);
             if (audioStream != null)
             {
                 var loadPlayerAsync = Task.Run(() => _player.Load(audioStream));// Vary on connection speed
@@ -70,7 +70,7 @@ namespace voice2midi
 
         private void SetupDownloadPath()
         {
-            string path = DependencyService.Get<IDownload>().Define_Default_Path();
+            string path = DependencyService.Get<IDownload>().GetDefaultPath();
             DownloadPathInfoLbl.Text = path;
         }
 
@@ -114,14 +114,14 @@ namespace voice2midi
                 DependencyService.Get<IDownload>().DownloadUrl(GetDownloadLink(".wav"));
         }
 
-        private string GetDownloadLink(string fileExtension)
+        private FileUrlStruct GetDownloadLink(string fileExtension)
         {
             string baseUrl = (string)Application.Current.Resources["voice2midi_base_url"];
             long id = _soundLinks
                 .Where(x => x.FileExtension == fileExtension)
                 .Select(x => x.Id)
                 .First();
-            return $"{baseUrl}/api/files/{id}/download";
+            return new FileUrlStruct{ Url = $"{baseUrl}/api/files/{id}/download", FileExtension = fileExtension };
         }
 
         public async void PermissionBtn_Clicked(object sender, EventArgs e)

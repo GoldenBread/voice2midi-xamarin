@@ -33,6 +33,7 @@
     <Folder Include="DependencyServices\" />
     <Folder Include="SystemConf\" />
     <Folder Include="Assets\" />
+    <Folder Include="ExtensionMethods\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="SoundListPage.cs" />

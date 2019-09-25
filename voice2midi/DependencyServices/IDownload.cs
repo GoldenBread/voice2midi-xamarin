@@ -1,10 +1,12 @@
 ﻿using System;
+using voice2midi.Models;
+
 namespace voice2midi.DependencyServices
 {
     public interface IDownload
     {
-        string Define_Default_Path();
+        string GetDefaultPath();
 
-        void DownloadUrl(string url);
+        void DownloadUrl(FileUrlStruct fileUrl);
     }
 }

@@ -9,9 +9,9 @@ namespace voice2midi.Models
         public long FileOutId { get; set; }
 
         [JsonProperty(PropertyName = "filePathIn")]
-        public long FilePathIn { get; set; }
+        public string FilePathIn { get; set; }
 
         [JsonProperty(PropertyName = "filePathOut")]
-        public long FilePathOut { get; set; }
+        public string FilePathOut { get; set; }
     }
 }

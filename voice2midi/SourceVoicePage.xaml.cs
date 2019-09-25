@@ -56,31 +56,19 @@ namespace voice2midi
 
         async void ConvertBtn_Clicked(object sender, EventArgs e)
         {
-            Edit_Loading_Indicator(true, "Uploading file");
+            Edit_Loading_Indicator(true, "Uploading wav file");
             FileUploadModel fileUploadModel = await _service.UploadSound(_audioSource);
+            Edit_Loading_Indicator(true, "Generating midi file");
             FileGenerationModel fileGenerationModelMidi = await _service.GenerateSound("midi", fileUploadModel.FileId);
+            Edit_Loading_Indicator(true, "Generating mp3 file");
             _service.GenerateSound("mp3", fileGenerationModelMidi.FileOutId).Wait();
+            Edit_Loading_Indicator(false);
 
 
-            
+
 
             List<FileModelShort> soundLinkList = await _service.SoundListSameSource(fileUploadModel.FileId);
             await Navigation.PushAsync(new PlayPage(soundLinkList));
-
-            /*var soundLinkList = await await _service.Upload_Generate_Sound(_audioSource).ContinueWith(soundll =>
-            {
-                Edit_Loading_Indicator(true, "Generating .mid");
-                return soundll;
-            });
-
-/*            var soundLinkList = await _service.Upload_Generate_Sound(_audioSource);
-            Edit_Loading_Indicator(true, "Generating .mp3");
-            var soundLinkList = await _service.Upload_Generate_Sound(_audioSource);*/
-
-            /*            if (soundLinkList != null)
-                        {
-                            await Navigation.PushAsync(new PlayPage(soundLinkList));
-                        }*/
         }
 
         void PlayBtn_Clicked(object sender, EventArgs e)

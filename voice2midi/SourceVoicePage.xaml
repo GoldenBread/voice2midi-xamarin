@@ -29,7 +29,7 @@
             <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="40, 40, 40, 40">
                 <Button x:Name="PlayBtn" Text="Play" Clicked="PlayBtn_Clicked" HorizontalOptions="FillAndExpand"/>
                 <Button x:Name="RecordBtn" Text="Record" Pressed="RecordBtn_Pressed" Released="RecordBtn_Released" HorizontalOptions="FillAndExpand" IsEnabled="false"/>
-                <Button x:Name="ConvertBtn" Text="Convert" Clicked="ConvertBtn_Clicked" HorizontalOptions="FillAndExpand" IsEnabled="false"/>
+                <Button x:Name="ConvertBtn" Text="Convert" Clicked="ConvertBtn_Clicked" HorizontalOptions="FillAndExpand" IsEnabled="True"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
